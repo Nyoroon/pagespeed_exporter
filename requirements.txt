@@ -1,0 +1,12 @@
+-i https://pypi.org/simple
+cachetools==2.1.0
+google-api-python-client==1.7.4
+google-auth-httplib2==0.0.3
+google-auth==1.5.1
+httplib2==0.11.3
+prometheus-client==0.4.0
+pyasn1-modules==0.2.2
+pyasn1==0.4.4
+rsa==4.0
+six==1.11.0
+uritemplate==3.0.0
