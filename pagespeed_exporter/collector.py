@@ -9,6 +9,10 @@ from .utils import camel_to_snake, get_or_create_gauge
 from enum import IntEnum
 
 
+class PageSpeedAPIError(Exception):
+    pass
+
+
 class PageSpeedCollector:
     PREFIX = "pagespeed"
     STRATEGIES = ("desktop", "mobile")
@@ -40,6 +44,11 @@ class PageSpeedCollector:
 
         async with self._aiohttp_client.get(self.API_URL, params=query_params) as r:
             data = await r.json()
+
+        if "error" in data:
+            raise PageSpeedAPIError(
+                "{d}: {s}".format(data["error"]["code"], data["error"]["message"])
+            )
 
         labels = dict(strategy=strategy)
 
@@ -116,8 +125,6 @@ class PageSpeedCollector:
             metric_labels.update(dict(category=data["overall_category"]))
 
             gauge = get_or_create_gauge(
-                self.registry,
-                metric_name,
-                "Loading experience overall category",
+                self.registry, metric_name, "Loading experience overall category"
             )
             gauge.add(metric_labels, 1)
