@@ -105,7 +105,7 @@ class PageSpeedCollector:
             gauge = get_or_create_gauge(
                 self.registry,
                 metric_fqname,
-                f"Loading experience percentile metric for {metric_name}",
+                "Loading experience percentile metric for {}".format(metric_name),
             )
             gauge.add(labels, value["percentile"] / 1000)
 
