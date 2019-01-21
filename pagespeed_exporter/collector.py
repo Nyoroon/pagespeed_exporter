@@ -47,7 +47,7 @@ class PageSpeedCollector:
 
         if "error" in data:
             raise PageSpeedAPIError(
-                "{d}: {s}".format(data["error"]["code"], data["error"]["message"])
+                "{}: {}".format(data["error"]["code"], data["error"]["message"])
             )
 
         labels = dict(strategy=strategy)
