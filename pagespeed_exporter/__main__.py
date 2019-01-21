@@ -12,7 +12,8 @@ async def handle_scrape(request):
     if not "target" in request.query:
         return web.HTTPBadRequest()
 
-    registry = await request.app.ps_collector.collect(request.query.get("target"))
+    collector = PageSpeedCollector(aiohttp_client=request.app.aiohttp_client)
+    registry = await collector.collect(request.query.get("target"))
     content, http_headers = render(registry, request.headers.getall(ACCEPT, []))
     return web.Response(body=content, headers=http_headers)
 
@@ -25,7 +26,6 @@ async def make_app():
     app = web.Application()
 
     app.aiohttp_client = aiohttp.ClientSession()
-    app.ps_collector = PageSpeedCollector(aiohttp_client=app.aiohttp_client)
 
     app.add_routes([web.get("/scrape", handle_scrape)])
 
