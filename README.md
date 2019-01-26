@@ -9,18 +9,18 @@ Google PageSpeed metrics exporter for Prometheus.
 ### Example prometheus config
 ```yaml
 - job_name: pagespeed
- metrics_path: /scrape
- relabel_configs:
-   - source_labels: [__address__]
-     target_label: __param_target
-   - source_labels: [__param_target]
-     target_label: instance
-   - replacement: localhost:9271
-     target_label: __address__
- scrape_interval: 300s
- scrape_timeout: 150s
- static_configs:
-   - targets:
-     - https://www.google.com
-     - https://www.ya.ru
-   ```
+  metrics_path: /scrape
+  relabel_configs:
+  - source_labels: [__address__]
+   target_label: __param_target
+  - source_labels: [__param_target]
+   target_label: instance
+  - replacement: localhost:9271
+   target_label: __address__
+  scrape_interval: 300s
+  scrape_timeout: 150s
+  static_configs:
+  - targets:
+   - https://www.google.com
+   - https://www.ya.ru
+```
