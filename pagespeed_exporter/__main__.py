@@ -1,3 +1,4 @@
+import logging
 import asyncio
 
 import aiohttp
@@ -35,4 +36,9 @@ async def make_app():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+
     web.run_app(make_app(), port=9271)

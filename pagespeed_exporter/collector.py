@@ -1,3 +1,4 @@
+import logging
 import asyncio
 
 import aiohttp
@@ -23,6 +24,7 @@ class PageSpeedCollector:
     def __init__(self, apikey=None, aiohttp_client=None):
         self._apikey = apikey
         self._aiohttp_client = aiohttp_client or aiohttp.ClientSession()
+        self.logger = logging.getLogger(__name__)
 
     async def collect(self, target):
         self.registry = Registry()
@@ -42,13 +44,20 @@ class PageSpeedCollector:
         if self._apikey:
             query_params.add("key", self._apikey)
 
-        async with self._aiohttp_client.get(self.API_URL, params=query_params) as r:
-            data = await r.json()
+        try:
+            async with self._aiohttp_client.get(self.API_URL, params=query_params) as r:
+                data = await r.json()
+        except asyncio.TimeoutError:
+            self.logger.error("PageSpeed API timeout :(")
+            return
 
         if "error" in data:
-            raise PageSpeedAPIError(
-                "{}: {}".format(data["error"]["code"], data["error"]["message"])
+            self.logger.error(
+                "PageSpeed API Error: code %s, %s",
+                data["error"]["code"],
+                data["error"]["message"],
             )
+            return
 
         labels = dict(strategy=strategy)
 
